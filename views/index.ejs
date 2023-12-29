@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<body>
+
+
+<div class="w3-bar w3-grey">
+  <a class="w3-bar-item w3-button"><img src="/images/<%= user.image %>" style="width: 50px"></a>
+  <a style="padding-right:45%;" class="w3-bar-item w3-button">Welcome <%= user.username %></a>
+  <a href="/UserPage" class="w3-bar-item w3-button">Home</a>
+  <a href="/add/<%= user.id %>" class="w3-bar-item w3-button">Add Post</a>
+  <a href="/post" class="w3-bar-item w3-button">My Post</a>
+  <a href="/profile/<%= user.id %>" class="w3-bar-item w3-button">Profile</a>
+  <a href="/logout" class="w3-bar-item w3-button">LOGOUT</a>
+</div>
+
+
+<center>
+    <br><br><br>
+    <% books.sort((a, b) => new Date(b.upload_date) - new Date(a.upload_date)).forEach(book => { %>
+        <div class="container" style="width:50%">
+            <% users.forEach(post => {
+                if (book.user_id == post.id) {
+            %>
+                <img src="/images/<%= post.image %>" style="width: 5%">
+                <%= post.username %> <%= new Date(book.upload_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %><br>
+        
+            <img src="/images/<%= book.image %>" style="width: 20%"><br>
+            title: <%= book.title %><br>
+            genre: <%= book.genre %><br>
+            publication date <%= new Date(book.publication_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %><br>
+            author: <%= book.author %><br>
+            <a href="/view/<%= book.id %>/<%= user.id %>" style="color: brown;">VIEW POST</a><br><br>
+        </div>
+    <%  } })}) %>
+    </center>
+</body>
+</html>

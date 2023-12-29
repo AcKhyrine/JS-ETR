@@ -1,0 +1,12 @@
+<% if(typeof(alert)!="undefined" ) {%>
+    <center><%= alert %></center>
+<%}%>
+<center><br>
+LOGIN<br>
+<form action="login" method="POST"><br>
+    Email: <input name="email" placeholder="Enter email" required /><br><br>
+    Password: <input type="password" name="password" placeholder="Password" minlength="6" required /><br>
+    <input type="submit" name="submit" value="LOGIN"></div><br>
+</form>
+<li class="nav-item"><a class="nav-link" href="/register">REGISTER</a></li>
+</center>

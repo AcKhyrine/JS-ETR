@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<body>
+
+<% users.forEach(user => {
+    if (me == user.id) { %>
+        <div class="w3-bar w3-grey">
+            <a class="w3-bar-item w3-button"><img src="/images/<%= user.image %>" style="width: 50px"></a>
+            <a style="padding-right:45%;" class="w3-bar-item w3-button">Welcome <%= user.username %></a>
+            <a href="/UserPage" class="w3-bar-item w3-button">Home</a>
+            <a href="/add/<%= user.id %>" class="w3-bar-item w3-button">Add Post</a>
+            <a href="/post" class="w3-bar-item w3-button">My Post</a>
+            <a href="/profile/<%= user.id %>" class="w3-bar-item w3-button">Profile</a>
+            <a href="/logout" class="w3-bar-item w3-button">LOGOUT</a>
+        </div>
+<%  }
+}); %>
+
+<center>
+    <br><br><br>
+
+    <% books.forEach(book => { %>
+        <% users.forEach(post => {
+            if (book.user_id == post.id) { %>
+                <div class="container" style="width:50%">
+                    <img src="/images/<%= post.image %>" style="width: 5%">
+                    <%= post.username %> <%= new Date(book.upload_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %><br>
+
+                    <img src="/images/<%= book.image %>" style="width: 20%"><br>
+                    title: <%= book.title %><br>
+                    genre: <%= book.genre %><br>
+                    publication date: <%= new Date(book.publication_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %><br>
+                    author: <%= book.author %><br><br><br>
+
+                    <form action="/view" method="post">
+                        <input type="text" name="comment" placeholder="Add a comment">
+                        <input type="hidden" value="<%= me %>" name="user_id">
+                        <input type="hidden" value="<%= book.id %>" name="book_id">
+                        <input type="submit" value="Add Comment">
+                    </form>
+
+                    <br>
+
+                    <p>Comments:</p>
+                    <% const bookComments = comments.filter(comment => comment.book_id == book.id); %>
+                    <% bookComments
+                        .sort((a, b) => new Date(b.date) - new Date(a.date))
+                        .forEach(comment => { 
+                           users.forEach(post1 => {
+                                if(post1.id == comment.user_id) { %>
+                                    <p>
+                                        <img src="/images/<%= post1.image %>" style="width: 2%"><%= post1.username %> : <%= comment.comment %><br>
+                                        <%= new Date(comment.date).toLocaleString('en-US', { 
+                                            month: 'long', 
+                                            day: 'numeric', 
+                                            year: 'numeric', 
+                                            hour: 'numeric', 
+                                            minute: 'numeric', 
+                                        }) %><br>
+
+                                        <% if (post1.id == me) { %>
+                                            <button onclick="editComment('<%= comment.id %>', '<%= comment.comment %>')">EDIT</button>
+                                            <button onclick="confirmDelete('<%= comment.id %>')">DELETE</button>
+                                        <% } %>
+                                    </p>
+                                <% } %>
+                            <% }); %>
+                    <% }); %>
+                </div>
+        <% } %>
+        <% }); %>
+    <% }); %>
+</center>
+
+<script>
+function editComment(commentId, currentComment, post) {
+    var editedComment = prompt("Edit your comment:", currentComment);
+
+    if (editedComment !== null && editedComment.trim() !== "") {
+        const commentElement = document.getElementById(`comment-${commentId}`);
+
+        fetch(`/edit-comment/${commentId}/${editedComment}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ comment: editedComment }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Server Response:", data);
+
+            if (data.success) {
+                window.location.reload();
+                alert(data.message);
+                commentElement.innerText = `${post.username} : ${editedComment}\n${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+                window.location.reload(true);
+            } else {
+                console.error('Edit error:', data.error);
+                alert('Error editing comment. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+    } else {
+        alert('Please enter a valid comment.');
+    }
+}
+
+
+
+
+    function confirmDelete(commentId) {
+        var confirmDelete = confirm("Are you sure you want to delete this comment?");
+        if (confirmDelete) {
+            fetch(`/delete-comment/${commentId}`, {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    window.location.reload();
+                } else {
+                    console.error('Delete error:', data.error);
+                    alert('Error deleting comment. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                alert('Error deleting comment. Please try again.');
+            });
+        }
+    }
+</script>
+
+</body>
+</html>
