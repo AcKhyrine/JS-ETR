@@ -7,7 +7,7 @@
 <body>
 
 <div class="w3-bar w3-grey">
-    <a class="w3-bar-item w3-button"><img src="/images/<%= user.image %>" style="width: 50px"></a>
+    <a class="w3-bar-item w3-button"><img src="/images/<%= user?.image ?? 'default.png' %>" style="width: 50px"></a>
     <a style="padding-right:45%;" class="w3-bar-item w3-button">Welcome <%= user.username %></a>
     <a href="/UserPage" class="w3-bar-item w3-button">Home</a>
     <a href="/add/<%= user.id %>" class="w3-bar-item w3-button">Add Post</a>
@@ -32,11 +32,34 @@
                 publication date <%= new Date(book.publication_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %><br>
                 author: <%= book.author %><br>
                 <a href="/view/<%= book.id %>/<%= user.id %>" style="color: brown;">VIEW</a> 
-                <a>EDIT</a> 
-                <a>DELETE</a><br><br>
+                <a href="/update/<%= book.id %>/<%= user.id %>">EDIT</a> 
+                <button onclick="confirmDelete('<%= book.id %>')">DELETE</button><br><br>
             </div>
         <%  } })}) %>
     </center>
-  
+  <script>
+     function confirmDelete(postId) {
+        var confirmDelete = confirm("Are you sure you want to delete this post?");
+        if (confirmDelete) {
+            fetch(`/delete-post/${postId}`, {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    window.location.reload();
+                } else {
+                    console.error('Delete error:', data.error);
+                    alert('Error deleting post. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                alert('Error deleting post. Please try again.');
+            });
+        }
+    }
+</script>
 </body>
 </html>

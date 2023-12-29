@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<body>
+
+
+<div class="w3-bar w3-grey">
+  <a class="w3-bar-item w3-button"><img src="/images/<%= user.image %>" style="width: 50px"></a>
+  <a style="padding-right:45%;" class="w3-bar-item w3-button">Welcome <%= user.username %></a>
+  <a href="/UserPage" class="w3-bar-item w3-button">Home</a>
+  <a href="/add/<%= user.id %>" class="w3-bar-item w3-button">Add Post</a>
+  <a href="/post" class="w3-bar-item w3-button">My Post</a>
+  <a href="/profile/<%= user.id %>" class="w3-bar-item w3-button">Profile</a>
+  <a href="/logout" class="w3-bar-item w3-button">LOGOUT</a>
+</div>
+
+
+<center>
+    <br><br><br>
+    <img src="/images/<%= book.image %>" style="width: 5%"><br>
+    <form action="/update" method="post" enctype="multipart/form-data">
+        <div style="color:red; " id="alertContainer"></div>
+      <div style="color: green;" id="successContainer"></div>
+      
+        Title: <input type="text" name="title" value="<%=book.title%>" required /><br>
+        Genre: <input type="text" name="genre" value="<%=book.genre%>" required /><br>
+        Publication Date <input type="date" name="publication_date" value="<%=book.publication_date%>" required /><br>
+        Author <input type="text" name="author" value="<%=book.author%>" required /><br>
+        Content <textarea name="description"  required ><%=book.description%></textarea><br>
+         <input type="hidden" name="id" value="<%= book.id %>"/>
+         <input type="hidden" name="userid" value="<%= user.id %>"/>
+         Image: <input class="form-control-file" type="file" accept="image/*" name="photo" ><br>
+         <button type="submit" class="btn btn-primary">UPDATE</button>
+     </form>
+    </center>
+
+    <script>
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+        var alertMessage = getUrlParameter('alert');
+        var successMessage = getUrlParameter('success');
+        if (alertMessage) {
+            var alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = '<div class="error-message">' + alertMessage + '</div>';
+        }
+        if (successMessage) {
+            var successContainer = document.getElementById('successContainer');
+            successContainer.innerHTML = '<div class="success-message">' + successMessage + '</div>';
+        }
+        </script>
+
+</body>
+</html>

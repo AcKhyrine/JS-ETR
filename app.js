@@ -103,7 +103,20 @@ const profileUpdate = async (req, res) => {
             return res.status(400).send('Missing required fields.');
         }
 
-        const sql = "UPDATE user SET fullname = ?, username = ?, email = ?, image=? WHERE id = ?";
+        if(photo == null){
+            const sql = "UPDATE user SET fullname = ?, username = ?, email = ? WHERE id = ?";
+
+            con.query(sql, [fullname, username, email, id], (err, results) => {
+                if (err) {
+                    console.error(err.message);
+                    return res.status(500).send("Internal Server Error");
+                }
+
+                console.log("Updated successfully");
+                res.redirect(`/profile/${id}?success=Updated%20successfully`);
+            });
+        }else{
+            const sql = "UPDATE user SET fullname = ?, username = ?, email = ?, image=? WHERE id = ?";
 
         con.query(sql, [fullname, username, email, photo, id], (err, results) => {
             if (err) {
@@ -114,8 +127,50 @@ const profileUpdate = async (req, res) => {
             console.log("Updated successfully");
             res.redirect(`/profile/${id}?success=Updated%20successfully`);
         });
+        }
     });
 };
+
+const PostUpdate = async (req, res) => {
+    upload(req, res, async (err) => {
+        if (err) {
+            res.send('Error uploading file.' + err);
+            return;
+        }
+
+        const { id, title, genre, publication_date, author, description, userid} = req.body;
+        const photo = req.file ? req.file.filename : null;
+
+        if (!title || !genre || !publication_date || !id || !author || !description) {
+            return res.status(400).send('Missing required fields.');
+        }
+
+        if(photo == null){
+            const sql = "UPDATE books SET title = ?, genre = ?, publication_date = ?, author = ?, description = ? WHERE id = ?";
+            con.query(sql, [title, genre, publication_date, author, description, id], (err, results) => {
+                if (err) {
+                    console.error(err.message);
+                    return res.status(500).send("Internal Server Error");
+                }
+    
+                console.log("Updated successfully");
+                res.redirect(`/update/${id}/${userid}?success=Updated%20successfully`);
+            });
+        }else{
+            const sql = "UPDATE books SET title = ?, genre = ?, publication_date = ?, author = ?, description = ?, image=? WHERE id = ?";
+            con.query(sql, [title, genre, publication_date, author, description, photo, id], (err, results) => {
+                if (err) {
+                    console.error(err.message);
+                    return res.status(500).send("Internal Server Error");
+                }
+    
+                console.log("Updated successfully");
+                res.redirect(`/update/${id}/${userid}?success=Updated%20successfully`);
+            });
+        }
+    });
+};
+
 const getMyPost = (req, res) => {
     const bookSql = "SELECT * FROM books";
     const userSql = "SELECT * FROM user";
@@ -241,6 +296,37 @@ const viewPost = (req, res) => {
     });
 };
 
+const updatePost = (req, res) => {
+    const bookID = req.params.id;
+    const userID = req.params.id2;
+    const bookSql = "SELECT * FROM books WHERE id = ?";
+    const userSql = "SELECT * FROM user WHERE id = ?";
+    
+    con.query(bookSql, [bookID], (err, bookResults) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).send("Internal Server Error");
+        }
+
+        const book = bookResults[0]; 
+
+        con.query(userSql, [userID], (err, users) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).send("Internal Server Error");
+            }
+
+            if (req.session.admin) {
+                renderView(res, "update", { title: "Index", user: req.session.admin, book, users });
+            } else {
+                renderView(res, "update", { title: "Index", user: null, book, users });
+            }
+        });
+    });
+};
+
+
+
 const addComment = (req, res) => {
     const { user_id, book_id, comment } = req.body;
     const sql = "INSERT INTO comment (user_id, book_id, comment) VALUES (?, ?, ?)";
@@ -292,6 +378,20 @@ const deleteComment = (req, res) => {
 
         console.log(`Comment with ID ${commentId} deleted successfully`);
         res.json({ success: true, message: "Comment deleted successfully" });
+    });
+};
+
+const deletePost= (req, res) => {
+    const postId = req.params.postId;
+    const sql = "DELETE FROM books WHERE id = ?";
+    con.query(sql, [postId], (err, results) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ success: false, message: "Internal Server Error" });
+        }
+
+        console.log(`Post with ID ${postId} deleted successfully`);
+        res.json({ success: true, message: "Post deleted successfully" });
     });
 };
 
@@ -376,7 +476,9 @@ app.post('/delete-comment/:commentId', deleteComment);
 app.get("/post", getMyPost);
 app.get("/profile/:id", profile);
 app.post("/profile", profileUpdate);
-
+app.post('/delete-post/:postId', deletePost);
+app.get("/update/:id/:id2", updatePost);
+app.post("/update", PostUpdate);
 app.use((req, res) => {
     res.redirect("/");
 });
