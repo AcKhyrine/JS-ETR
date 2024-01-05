@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #f1f1f1;
+            padding: 20px;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <a href="/admin_dashboard">Dashboard</a>
+        <a href="/admin_books">Books</a>
+        <a href="/admin_comments">Comments</a>
+        <a href="/admin_users">Users</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <!-- admin_users.ejs -->
+    <h1>Users</h1>
+
+    <div>
+        <input type="text" id="userSearch" placeholder="Search by username">
+        <button onclick="searchUsers()">Search</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Book Count</th>
+                <th>Comment Count</th>
+                <!-- Add other headers as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user => { %>
+            <% if (user.username !== 'admin') { %>
+            <tr>
+                <td><%= user.id %></td>
+                <td><%= user.username %></td>
+                <td><%= user.book_count %></td>
+                <td><%= user.comment_count %></td>
+                <!-- Add other user details as needed -->
+            </tr>
+            <% } %>
+            <% }); %>
+        </tbody>
+    </table>
+
+    <script>
+        function searchUsers() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("userSearch");
+            filter = input.value.toUpperCase();
+            table = document.querySelector("table");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1]; // Index 1 corresponds to the Username column
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+
+
+</body>
+
+</html>

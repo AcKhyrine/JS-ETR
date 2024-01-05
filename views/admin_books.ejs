@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+
+    <style>
+        body {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #f1f1f1;
+            padding: 20px;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+        }
+
+        .description-cell {
+            max-height: 3.6em;
+            /* Adjust based on your font size and line height */
+            overflow: hidden;
+        }
+
+        .description-content {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <a href="/admin_dashboard">Dashboard</a>
+        <a href="/admin_books">Books</a>
+        <a href="/admin_comments">Comments</a>
+        <a href="/admin_users">Users</a>
+        <a href="/logout">Logout</a>
+    </div>
+    <h1>Books</h1>
+
+    <div>
+        <input type="text" id="bookSearch" placeholder="Search by title, genre, author, etc.">
+        <button onclick="searchBooks()">Search</button>
+    </div>
+
+    <table id="booksTable">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Genre</th>
+                <th>Author</th>
+                <th>Publication Date</th>
+                <th>Description</th>
+                <th>Posted by</th>
+                <th>Likes</th>
+                <!-- Add other headers as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <% books.forEach(book => { %>
+            <tr>
+                <td><img src="/images/<%= book.image %>" alt="<%= book.user_username %>'s Image" width="50" height="50">
+                </td>
+                <td><%= book.title %></td>
+                <td><%= book.genre %></td>
+                <td><%= book.author %></td>
+                <td><%= book.publication_date %></td>
+                <td class="description-cell">
+                    <!-- Limit description to two lines -->
+                    <div class="description-content">
+                        <%= book.description %>
+                    </div>
+                </td>
+                <td>
+                    <% if (book.user_username) { %>
+                    <%= book.user_username %>
+                    <% } else { %>
+                    Unknown User
+                    <% } %>
+                </td>
+                <td><%= book.like %></td>
+                <!-- Add other cells as needed -->
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+    <script>
+        function searchBooks() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("bookSearch");
+            filter = input.value.toUpperCase();
+            table = document.querySelector("table");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1]; // Index 1 corresponds to the Title column
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

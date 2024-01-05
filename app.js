@@ -10,15 +10,15 @@ app.use(express.static("upload"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set('views', path.join(__dirname, 'views'));
-const util = require('util'); 
+const util = require('util');
 
 app.use(session({
     secret: "abc",
     resave: false,
-    saveUninitialized:false
+    saveUninitialized: false
 }))
-app.listen(port, (err)=>{
-    if(err){
+app.listen(port, (err) => {
+    if (err) {
         console.log(err.message);
         return;
     }
@@ -26,19 +26,19 @@ app.listen(port, (err)=>{
 })
 app.set("view engine", "ejs");
 
-const isloginAdmin = (req, res, next) =>{
-    if(!req.session.admin){
+const isloginAdmin = (req, res, next) => {
+    if (!req.session.admin) {
         res.redirect("/login")
-    }else{
+    } else {
         next();
     }
 };
 
-const renderView = (res, view, options = {})=> res.render(view, {...options})
+const renderView = (res, view, options = {}) => res.render(view, { ...options })
 
-const queryHandler = (res, sql, params, successMessage, redirectPath)=>{
-    con.query(sql, params, (err, results)=>{
-        if(err){
+const queryHandler = (res, sql, params, successMessage, redirectPath) => {
+    con.query(sql, params, (err, results) => {
+        if (err) {
             console.log(err.message);
             return;
         }
@@ -74,19 +74,19 @@ const getPost = (req, res) => {
 const profile = (req, res) => {
     const id = req.params.id;
     const userSql = "SELECT * FROM user WHERE id = ?";
-        con.query(userSql, [id], (err, users) => {  
-            if (err) {
-                console.error(err.message);
-                return res.status(500).send("Internal Server Error");
-            }
-            if (req.session.admin) {
-                renderView(res, "profile", { title: "profile", user: req.session.admin, user: users[0] });
+    con.query(userSql, [id], (err, users) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).send("Internal Server Error");
+        }
+        if (req.session.admin) {
+            renderView(res, "profile", { title: "profile", user: req.session.admin, user: users[0] });
 
-            } else {
-                renderView(res, "profile", { title: "profile", user: req.session.admin, user: users[0] });
+        } else {
+            renderView(res, "profile", { title: "profile", user: req.session.admin, user: users[0] });
 
-            }
-        });
+        }
+    });
 };
 
 const profileUpdate = async (req, res) => {
@@ -103,7 +103,7 @@ const profileUpdate = async (req, res) => {
             return res.status(400).send('Missing required fields.');
         }
 
-        if(photo == null){
+        if (photo == null) {
             const sql = "UPDATE user SET fullname = ?, username = ?, email = ? WHERE id = ?";
 
             con.query(sql, [fullname, username, email, id], (err, results) => {
@@ -115,18 +115,18 @@ const profileUpdate = async (req, res) => {
                 console.log("Updated successfully");
                 res.redirect(`/profile/${id}?success=Updated%20successfully`);
             });
-        }else{
+        } else {
             const sql = "UPDATE user SET fullname = ?, username = ?, email = ?, image=? WHERE id = ?";
 
-        con.query(sql, [fullname, username, email, photo, id], (err, results) => {
-            if (err) {
-                console.error(err.message);
-                return res.status(500).send("Internal Server Error");
-            }
+            con.query(sql, [fullname, username, email, photo, id], (err, results) => {
+                if (err) {
+                    console.error(err.message);
+                    return res.status(500).send("Internal Server Error");
+                }
 
-            console.log("Updated successfully");
-            res.redirect(`/profile/${id}?success=Updated%20successfully`);
-        });
+                console.log("Updated successfully");
+                res.redirect(`/profile/${id}?success=Updated%20successfully`);
+            });
         }
     });
 };
@@ -138,32 +138,32 @@ const PostUpdate = async (req, res) => {
             return;
         }
 
-        const { id, title, genre, publication_date, author, description, userid} = req.body;
+        const { id, title, genre, publication_date, author, description, userid } = req.body;
         const photo = req.file ? req.file.filename : null;
 
         if (!title || !genre || !publication_date || !id || !author || !description) {
             return res.status(400).send('Missing required fields.');
         }
 
-        if(photo == null){
+        if (photo == null) {
             const sql = "UPDATE books SET title = ?, genre = ?, publication_date = ?, author = ?, description = ? WHERE id = ?";
             con.query(sql, [title, genre, publication_date, author, description, id], (err, results) => {
                 if (err) {
                     console.error(err.message);
                     return res.status(500).send("Internal Server Error");
                 }
-    
+
                 console.log("Updated successfully");
                 res.redirect(`/update/${id}/${userid}?success=Updated%20successfully`);
             });
-        }else{
+        } else {
             const sql = "UPDATE books SET title = ?, genre = ?, publication_date = ?, author = ?, description = ?, image=? WHERE id = ?";
             con.query(sql, [title, genre, publication_date, author, description, photo, id], (err, results) => {
                 if (err) {
                     console.error(err.message);
                     return res.status(500).send("Internal Server Error");
                 }
-    
+
                 console.log("Updated successfully");
                 res.redirect(`/update/${id}/${userid}?success=Updated%20successfully`);
             });
@@ -195,7 +195,7 @@ const getMyPost = (req, res) => {
     });
 };
 
-  const addBlog = (req, res) => {
+const addBlog = (req, res) => {
     upload(req, res, async (err) => {
         if (err) {
             return res.status(500).send('Error uploading file.');
@@ -301,14 +301,14 @@ const updatePost = (req, res) => {
     const userID = req.params.id2;
     const bookSql = "SELECT * FROM books WHERE id = ?";
     const userSql = "SELECT * FROM user WHERE id = ?";
-    
+
     con.query(bookSql, [bookID], (err, bookResults) => {
         if (err) {
             console.error(err.message);
             return res.status(500).send("Internal Server Error");
         }
 
-        const book = bookResults[0]; 
+        const book = bookResults[0];
 
         con.query(userSql, [userID], (err, users) => {
             if (err) {
@@ -330,7 +330,7 @@ const updatePost = (req, res) => {
 const addComment = (req, res) => {
     const { user_id, book_id, comment } = req.body;
     const sql = "INSERT INTO comment (user_id, book_id, comment) VALUES (?, ?, ?)";
-    
+
     con.query(sql, [user_id, book_id, comment], (err, results) => {
         if (err) {
             console.error(err.message);
@@ -381,7 +381,7 @@ const deleteComment = (req, res) => {
     });
 };
 
-const deletePost= (req, res) => {
+const deletePost = (req, res) => {
     const postId = req.params.postId;
     const sql = "DELETE FROM books WHERE id = ?";
     con.query(sql, [postId], (err, results) => {
@@ -404,7 +404,7 @@ const postregister = (req, res) => {
 
         const { fullname, username, email, password } = req.body;
         const hashpass = await argon2.hash(password);
-        const photo = req.file ? req.file.filename : null; 
+        const photo = req.file ? req.file.filename : null;
 
         const sql = "INSERT INTO user(fullname, username, email, password, image) VALUES (?, ?, ?, ?, ?)";
 
@@ -433,26 +433,156 @@ const upload = multer({
     storage: storage,
 }).single('photo');
 
-const postlogin = (req, res)=>{
-    const {email, password} = req.body;
+const postlogin = (req, res) => {
+    const { email, password } = req.body;
     const sql = "SELECT * FROM user WHERE email = ?";
-    con.query(sql, [email], async(err, results)=>{
-        if(err){
+
+    con.query(sql, [email], async (err, results) => {
+        if (err) {
             console.log(err.message);
         }
-        if(results.length > 0){
+
+        if (results.length > 0) {
             const hashpass = results[0].password;
-            if(await argon2.verify(hashpass, password)){
-                req.session.admin = results[0];
-                res.redirect("/UserPage")
-            }else{
-                renderView(res, "login", {title: "login page", alert:"The password is incorrect"})
+
+            if (await argon2.verify(hashpass, password)) {
+                if (results[0].username === "admin") {
+                    // Redirect to admin_dashboard.ejs for admin user
+                    res.redirect("/admin_dashboard");
+                } else {
+                    // Redirect to UserPage for non-admin users
+                    req.session.admin = results[0];
+                    res.redirect("/UserPage");
+                }
+            } else {
+                renderView(res, "login", { title: "login page", alert: "The password is incorrect" });
             }
-        }else{
-            renderView(res, "login", {title: "login page", alert:"email does not exist"})
+        } else {
+            renderView(res, "login", { title: "login page", alert: "email does not exist" });
         }
-    })
-}
+    });
+};
+
+//ADMIN SIDE
+
+//dashboard admin
+app.get("/admin_dashboard", async (req, res) => {
+    try {
+        // Get count of users (excluding admin)
+        const userCount = await getCount("user", "username != 'admin'");
+
+        // Get count of books
+        const bookCount = await getCount("books");
+
+        // Get count of comments
+        const commentCount = await getCount("comment");
+
+        res.render("admin_dashboard", { userCount, bookCount, commentCount });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// get count
+const getCount = async (table, condition = null) => {
+    return new Promise((resolve, reject) => {
+        let sql = `SELECT COUNT(*) AS count FROM ${table}`;
+        if (condition) {
+            sql += ` WHERE ${condition}`;
+        }
+
+        con.query(sql, (err, results) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            resolve(results[0].count);
+        });
+    });
+};
+
+// Get books details for admin
+app.get("/admin_books", async (req, res) => {
+    try {
+        const booksQuery = `
+            SELECT
+                books.*,
+                user.username AS user_username,
+                user.image AS user_image
+            FROM books
+            LEFT JOIN user ON books.user_id = user.id
+        `;
+
+        const books = await fetchDataFromDatabase(booksQuery);
+        res.render("admin_books", { books });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// Get comments details for admin
+app.get("/admin_comments", async (req, res) => {
+    try {
+        const commentsQuery = `
+            SELECT
+                comment.*,
+                user.username AS user_username,
+                user.image AS user_image,
+                books.title AS book_title
+            FROM comment
+            LEFT JOIN user ON comment.user_id = user.id
+            LEFT JOIN books ON comment.book_id = books.id
+        `;
+
+        const comments = await fetchDataFromDatabase(commentsQuery);
+        res.render("admin_comments", { comments });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
+// Get users details for admin
+app.get("/admin_users", async (req, res) => {
+    try {
+        const usersQuery = `
+            SELECT
+                user.id,
+                user.username,
+                COUNT(DISTINCT books.id) AS book_count,
+                COUNT(DISTINCT comment.id) AS comment_count
+            FROM user
+            LEFT JOIN books ON user.id = books.user_id
+            LEFT JOIN comment ON user.id = comment.user_id
+            GROUP BY user.id, user.username
+        `;
+
+        const users = await fetchDataFromDatabase(usersQuery);
+        res.render("admin_users", { users });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// logic to fetch data from the database
+const fetchDataFromDatabase = async (query) => {
+    return new Promise((resolve) => {
+        con.query(query, (err, results) => {
+            if (err) {
+                console.error(err.message);
+                resolve([]);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+};
+
 
 app.get("/", (req, res) => renderView(res, "login"));
 app.get("/login", (req, res) => res.redirect("/"));

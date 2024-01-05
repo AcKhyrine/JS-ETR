@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #f1f1f1;
+            padding: 20px;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .sidebar a:hover {
+            background-color: #ddd;
+        }
+
+        #commentsTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #commentsTable th,
+        #commentsTable td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #commentsTable th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <a href="/admin_dashboard">Dashboard</a>
+        <a href="/admin_books">Books</a>
+        <a href="/admin_comments">Comments</a>
+        <a href="/admin_users">Users</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <!-- admin_comments.ejs -->
+    <h1>Comments</h1>
+
+    <div>
+        <input type="text" id="commentSearch" placeholder="Search by user, comment, date, or book title">
+        <button onclick="searchComments()">Search</button>
+    </div>
+
+    <table id="commentsTable">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Comment</th>
+                <th>Date</th>
+                <th>Book Title</th>
+                <!-- Add other headers as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <% comments.forEach(comment => { %>
+            <tr>
+                <td><%= comment.user_username ? comment.user_username : 'Unknown User' %></td>
+                <td><%= comment.comment %></td>
+                <td><%= comment.date %></td>
+                <td><%= comment.book_title %></td>
+                <!-- Add other cells as needed -->
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+    <script>
+        function searchComments() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("commentSearch");
+            filter = input.value.toUpperCase();
+            table = document.querySelector("#commentsTable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                tdUser = tr[i].getElementsByTagName("td")[0]; // Index 0 corresponds to the User column
+                tdComment = tr[i].getElementsByTagName("td")[1]; // Index 1 corresponds to the Comment column
+                tdDate = tr[i].getElementsByTagName("td")[2]; // Index 2 corresponds to the Date column
+                tdTitle = tr[i].getElementsByTagName("td")[3]; // Index 3 corresponds to the Book Title column
+
+                if (tdUser || tdComment || tdDate || tdTitle) {
+                    txtValueUser = tdUser.textContent || tdUser.innerText;
+                    txtValueComment = tdComment.textContent || tdComment.innerText;
+                    txtValueDate = tdDate.textContent || tdDate.innerText;
+                    txtValueTitle = tdTitle.textContent || tdTitle.innerText;
+
+                    if (
+                        txtValueUser.toUpperCase().indexOf(filter) > -1 ||
+                        txtValueComment.toUpperCase().indexOf(filter) > -1 ||
+                        txtValueDate.toUpperCase().indexOf(filter) > -1 ||
+                        txtValueTitle.toUpperCase().indexOf(filter) > -1
+                    ) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+
+
+</body>
+
+</html>
