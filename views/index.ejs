@@ -1,39 +1,88 @@
 <!DOCTYPE html>
-<html>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <style>
+      body {
+            background-image: url('https://scholarlykitchen.sspnet.org/wp-content/uploads/2018/07/iStock-506432952.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    
+    .w3-bar {
+      margin-bottom: 20px;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 50%;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .book-container {
+      width: 25%;
+      padding: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      margin: 10px;
+      text-align: center;
+      background-color: #fff; /* Set the background color of each book container */
+      border-color: #b5b5b5; /* Set the border color of each book container */
+      border-radius: 3%;
+    }
+  </style>
+</head>
 <body>
 
-
-<div class="w3-bar w3-grey">
+<div class="w3-bar " style="background-color: rgb(4, 55, 86); color: #ffffff;">
   <a class="w3-bar-item w3-button"><img src="/images/<%= user.image %>" style="width: 50px"></a>
   <a style="padding-right:45%;" class="w3-bar-item w3-button">Welcome <%= user.username %></a>
   <a href="/UserPage" class="w3-bar-item w3-button">Home</a>
   <a href="/add/<%= user.id %>" class="w3-bar-item w3-button">Add Post</a>
   <a href="/post" class="w3-bar-item w3-button">My Post</a>
   <a href="/profile/<%= user.id %>" class="w3-bar-item w3-button">Profile</a>
-  <a href="/logout" class="w3-bar-item w3-button">LOGOUT</a>
+  <a href="/logout" class="w3-bar-item w3-button">Logout</a>
 </div>
 
-
 <center>
-    <br><br><br>
-    <% books.sort((a, b) => new Date(b.upload_date) - new Date(a.upload_date)).forEach(book => { %>
-        <div class="container" style="width:50%">
+    <div class="container">
+        <% books.sort((a, b) => new Date(b.upload_date) - new Date(a.upload_date)).forEach(book => { %>
             <% users.forEach(post => {
                 if (book.user_id == post.id) {
             %>
-                <img src="/images/<%= post.image %>" style="width: 5%">
+            <div class="book-container">
+                <img src="/images/<%= post.image %>" style="width: 50px; height: 50px;">
+                <br>
                 <%= post.username %> <%= new Date(book.upload_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %><br>
-        
-            <img src="/images/<%= book.image %>" style="width: 20%"><br>
-            title: <%= book.title %><br>
-            genre: <%= book.genre %><br>
-            publication date <%= new Date(book.publication_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %><br>
-            author: <%= book.author %><br>
-            <a href="/view/<%= book.id %>/<%= user.id %>" style="color: brown;">VIEW POST</a><br><br>
+    
+                <img src="/images/<%= book.image %>" style="width: 100%; height: 300px;" alt="<%= book.title %> Image"><br><br>
+                <strong>Title:</strong> <%= book.title %><br>
+                <strong>Genre:</strong> <%= book.genre %><br>
+                <strong>Publication Date:</strong> <%= new Date(book.publication_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %><br>
+                <strong>Author:</strong> <%= book.author %><br>
+                <a href="/view/<%= book.id %>/<%= user.id %>" style="color: brown;">VIEW POST</a><br><br>
+            </div>
+    
+            <%  } })}) %>
         </div>
-    <%  } })}) %>
-    </center>
+    
+  </center>
 </body>
 </html>

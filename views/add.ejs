@@ -1,11 +1,72 @@
 <!DOCTYPE html>
 <html>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .w3-bar {
+            margin-bottom: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 50%;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        form {
+            width: 50%;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        form input,
+        form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        form button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
 <body>
 
-
-  <div class="w3-bar w3-grey">
+    <div class="w3-bar " style="background-color: rgb(4, 55, 86); color: #ffffff;">
     <a class="w3-bar-item w3-button"><img src="/images/<%= user.image %>" style="width: 50px"></a>
     <a style="padding-right:45%;" class="w3-bar-item w3-button">Welcome <%= user.username %></a>
     <a href="/UserPage" class="w3-bar-item w3-button">Home</a>
@@ -13,20 +74,19 @@
     <a href="/post" class="w3-bar-item w3-button">My Post</a>
     <a href="/profile/<%= user.id %>" class="w3-bar-item w3-button">Profile</a>
     <a href="/logout" class="w3-bar-item w3-button">LOGOUT</a>
-  </div>
-  
+</div>
 
 <center>
-    ADD <br>
+    <h2>ADD</h2>
     <form action="/add" method="POST" enctype="multipart/form-data">
-       Title: <input type="text" name="title" required /><br>
-       Genre: <input type="text" name="genre" required /><br>
-       Publication Date <input type="date" name="publication_date" required /><br>
-       Author <input type="text" name="author" required /><br>
-       Content <textarea name="description" required></textarea><br>
-        <input type="hidden" name="id" value="<%= user.id %>"/>
-        Image: <input class="form-control-file" type="file" accept="image/*" name="photo" ><br>
-        <button type="submit" class="btn btn-primary">ADD</button>
+        <input type="hidden" name="id" value="<%=user.id%>" />
+        Title: <input type="text" name="title" required /><br>
+        Genre: <input type="text" name="genre" required /><br>
+        Publication Date: <input type="date" name="publication_date" required /><br>
+        Author: <input type="text" name="author" required /><br>
+        Content: <textarea name="description" required></textarea><br>
+        Image: <input class="form-control-file" type="file" accept="image/*" name="photo" required><br>
+        <button type="submit">ADD</button>
     </form>
 </center>
 </body>

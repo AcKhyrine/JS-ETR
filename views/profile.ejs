@@ -1,12 +1,78 @@
 <!DOCTYPE html>
 <html>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .w3-bar {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 50%;
+        }
+
+        form {
+            width: 50%;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        form input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        form button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        form button:hover {
+            background-color: #555;
+        }
+
+        #alertContainer, #successContainer {
+            margin-top: 10px;
+        }
+
+        .error-message {
+            color: red;
+        }
+
+        .success-message {
+            color: green;
+        }
+    </style>
+</head>
 <body>
 
-
-<div class="w3-bar w3-grey">
-    <a class="w3-bar-item w3-button"><img src="/images/<%= user.image %>" style="width: 50px"></a>
+    <div class="w3-bar " style="background-color: rgb(4, 55, 86); color: #ffffff;">
+    <a class="w3-bar-item w3-button"><img src="/images/<%= user && user.image %>" style="width: 50px"></a>
     <a style="padding-right:45%;" class="w3-bar-item w3-button">Welcome <%= user.username %></a>
     <a href="/UserPage" class="w3-bar-item w3-button">Home</a>
     <a href="/add/<%= user.id %>" class="w3-bar-item w3-button">Add Post</a>
@@ -15,41 +81,39 @@
     <a href="/logout" class="w3-bar-item w3-button">LOGOUT</a>
 </div>
 
-<center><br><br><br>
+<center>
+    <br><br><br>
     <img src="/images/<%= user && user.image %>" style="width: 80px">
     <form action="/profile" method="post" enctype="multipart/form-data">
-      <div style="color:red; " id="alertContainer"></div>
-      <div style="color: green;" id="successContainer"></div>
-        UPDATE PROFILE<br>
+        <div id="alertContainer" class="error-message"></div>
+        <div id="successContainer" class="success-message"></div>
+        <h2>UPDATE PROFILE</h2>
         <input type="hidden" name="id" value="<%=user.id%>">
         Fullname: <input type="text" value="<%=user.fullname%>" name="fullname" required><br>
         Username: <input type="text" value="<%=user.username%>" name="username" required><br>
         Email: <input type="text" value="<%=user.email%>" name="email" required><br>
         Profile: <input class="form-control-file" type="file" accept="image/*" name="photo"><br>
-    
-        <input type="submit" value="update profile">
+        <button type="submit">Update Profile</button>
     </form>
-    
 </center>
 
-
 <script>
-function getUrlParameter(name) {
-    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-    var results = regex.exec(location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-}
-var alertMessage = getUrlParameter('alert');
-var successMessage = getUrlParameter('success');
-if (alertMessage) {
-    var alertContainer = document.getElementById('alertContainer');
-    alertContainer.innerHTML = '<div class="error-message">' + alertMessage + '</div>';
-}
-if (successMessage) {
-    var successContainer = document.getElementById('successContainer');
-    successContainer.innerHTML = '<div class="success-message">' + successMessage + '</div>';
-}
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+    var alertMessage = getUrlParameter('alert');
+    var successMessage = getUrlParameter('success');
+    if (alertMessage) {
+        var alertContainer = document.getElementById('alertContainer');
+        alertContainer.innerHTML = '<div class="error-message">' + alertMessage + '</div>';
+    }
+    if (successMessage) {
+        var successContainer = document.getElementById('successContainer');
+        successContainer.innerHTML = '<div class="success-message">' + successMessage + '</div>';
+    }
 </script>
     
 </body>

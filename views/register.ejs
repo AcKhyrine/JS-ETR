@@ -1,20 +1,97 @@
-<center><br><br><br>
-    <form action="" id="registration_form" method="post" enctype="multipart/form-data"><br>
-    REGISTRATION<br>
-    <% if (typeof(alert) !== "undefined") { %>
-        <div class="error-message"><%= alert %></div>
-    <% } %>
-    
-    <% if (typeof(success) !== "undefined") { %>
-        <div class="success-message"><%= success %></div>
-    <% } %><br>
-    Fullname: <input type="text" name="fullname" required><br>
-    Username: <input type="text" name="username" required><br>
-    Email: <input type="text" name="email" required><br>
-    Password: <input type="password" name="password" minlength="6" required><br>
-    Profile: <input class="form-control-file" type="file" accept="image/*" name="photo" required> <br>
-    <button type="submit"> Register </button>
-    </form>
-    <li class="nav-item"><a class="nav-link" href="/login">LOGIN</a></li>
-    </center>
-    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+       body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('https://i.pinimg.com/originals/8b/5f/0c/8b5f0c111aeac94942c5839df9eea014.jpg'); /* Add your background image URL */
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .registration-container {
+            background-color: rgba(255, 255, 255, 0.8); /* Add background color with opacity */
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: #333; /* Set text color */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .error-message {
+            color: red;
+        }
+
+        .success-message {
+            color: green;
+        }
+
+        /* Style for form elements */
+        form {
+            margin-top: 20px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: rgb(4, 55, 86);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgb(4, 55, 86);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="registration-container">
+        <center>
+            <h2>REGISTRATION</h2>
+            
+            <% if (typeof(alert) !== "undefined") { %>
+                <div class="error-message"><%= alert %></div>
+            <% } %>
+            
+            <% if (typeof(success) !== "undefined") { %>
+                <div class="success-message"><%= success %></div>
+            <% } %>
+            
+            <form action="" id="registration_form" method="post" enctype="multipart/form-data">
+                Fullname: <input type="text" name="fullname" required><br>
+                Username: <input type="text" name="username" required><br>
+                Email: <input type="text" name="email" required><br>
+                Password: <input type="password" name="password" minlength="6" required><br>
+                Profile: <input class="form-control-file" type="file" accept="image/*" name="photo" required> <br>
+                <button type="submit">Register</button>
+            </form>
+            
+            <li class="nav-item"><a class="nav-link" href="/login">LOGIN</a></li>
+        </center>
+    </div>
+
+</body>
+</html>

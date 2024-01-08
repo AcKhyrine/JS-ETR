@@ -201,7 +201,7 @@ const addBlog = (req, res) => {
             return res.status(500).send('Error uploading file.');
         }
 
-        const { title, genre, publication_date, author, description, id } = req.body;
+        const { title, genre, publication_date, author, description, id,} = req.body;
         const photo = req.file ? req.file.filename : null;
 
         if (!title || !genre || !publication_date || !author || !description || !id) {

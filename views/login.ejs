@@ -1,12 +1,73 @@
-<% if(typeof(alert)!="undefined" ) {%>
-    <center><%= alert %></center>
-<%}%>
-<center><br>
-LOGIN<br>
-<form action="login" method="POST"><br>
-    Email: <input name="email" placeholder="Enter email" required /><br><br>
-    Password: <input type="password" name="password" placeholder="Password" minlength="6" required /><br>
-    <input type="submit" name="submit" value="LOGIN"></div><br>
-</form>
-<li class="nav-item"><a class="nav-link" href="/register">REGISTER</a></li>
-</center>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('https://i.pinimg.com/originals/8b/5f/0c/8b5f0c111aeac94942c5839df9eea014.jpg'); /* Add your background image URL */
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.865); /* Add background color with opacity */
+            padding: 50px;
+            border-radius: 10px;
+            text-align: center;
+            color: #333; /* Set text color */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Style for form elements */
+        form {
+            margin-top: 20px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: rgb(4, 55, 86);
+            color: white;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: rgb(4, 55, 86);
+        }
+    </style>
+</head>
+<body>
+
+    <% if(typeof(alert)!="undefined" ) { %>
+        <center><%= alert %></center>
+    <% } %>
+
+    <div class="login-container">
+        <center>
+            <h2>LOGIN</h2>
+            <form action="login" method="POST">
+                Email: <input name="email" placeholder="Enter email" required /><br><br>
+                Password: <input type="password" name="password" placeholder="Password" minlength="6" required /><br>
+                <input type="submit" name="submit" value="LOGIN">
+            </form>
+            <li class="nav-item"><a class="nav-link" href="/register">REGISTER</a></li>
+        </center>
+    </div>
+
+</body>
+</html>
