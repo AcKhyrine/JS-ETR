@@ -14,13 +14,12 @@
         }
 
         .sidebar {
-            width: 213px;
+            width: 180px;
             height: 710px;
             background-color: rgb(4, 55, 86);
             color: white;
             padding: 20px;
             box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
-            
         }
 
         .sidebar a {
@@ -35,42 +34,26 @@
         .sidebar a:hover {
             background-color: #555;
         }
-        table {
-            margin: auto;
-            width: 50%;
-            border-collapse: collapse;
-            margin-top: 20px;
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
             margin-bottom: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        th, td {
-            padding: 12px;
-            text-align: center;
-            border: 1px solid  ;
-          
-        }
-
-        th {
-            background-color: rgb(4, 55, 86);
-            color: rgb(255, 255, 255);
-        }
-
-        tbody tr:hover {
-            background-color: #f5f5f5;
-        }
-        #userSearch {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
+        input[type="text"] {
+            padding: 8px;
+            margin-right: 8px;
+            border: 1px solid #ddd;
             border-radius: 4px;
-            margin-right: 5px;
         }
 
-        /* Style for the search button */
-        #searchButton {
-            padding: 10px 20px;
-            font-size: 16px;
+        button {
+            padding: 8px 16px;
             background-color: rgb(4, 55, 86);
             color: white;
             border: none;
@@ -78,13 +61,46 @@
             cursor: pointer;
         }
 
-        /* Style for the search button on hover */
+        button:hover {
+            background-color: rgb(4, 55, 86);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: rgb(4, 55, 86);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .description-cell {
+            max-height: 3.6em;
+            overflow: hidden;
+        }
+
+        .description-content {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
         #searchButton:hover {
             background-color: rgb(2, 97, 156);
-        }
-        .search-container {
-            text-align: center;
-            margin-top: 20px;
         }
     </style>
 </head>
@@ -99,61 +115,63 @@
         <a href="/logout">Logout</a><br>
     </div>
 
-    <!-- admin_users.ejs -->
-    <h1>Users</h1>
-<section>
-    <div class="search-container">
-        <input type="text" id="userSearch" placeholder="Search by username">
-        <button id="searchButton" onclick="searchUsers()">Search</button>
-    </div>
-    <table class="table">
-        <thead class="thead-light">
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Book Count</th>
-                <th>Comment Count</th>
-                <!-- Add other headers as needed -->
-            </tr>
-        </thead>
-        <tbody>
-            <% users.forEach(user => { %>
-            <% if (user.username !== 'admin') { %>
-            <tr>
-                <td><%= user.id %></td>
-                <td><%= user.username %></td>
-                <td><%= user.book_count %></td>
-                <td><%= user.comment_count %></td>
-                <!-- Add other user details as needed -->
-            </tr>
-            <% } %>
-            <% }); %>
-        </tbody>
-    </table>    
-</section>
+    <div class="content">
+        <!-- admin_users.ejs -->
+        <h1>Users</h1>
+        <section>
+            <div class="search-container">
+                <input type="text" id="userSearch" placeholder="Search by username">
+                <button id="searchButton" onclick="searchUsers()">Search</button>
+            </div>
+            <table class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Book Count</th>
+                        <th>Comment Count</th>
+                        <!-- Add other headers as needed -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(user => { %>
+                    <% if (user.username !== 'admin') { %>
+                    <tr>
+                        <td><%= user.id %></td>
+                        <td><%= user.username %></td>
+                        <td><%= user.book_count %></td>
+                        <td><%= user.comment_count %></td>
+                        <!-- Add other user details as needed -->
+                    </tr>
+                    <% } %>
+                    <% }); %>
+                </tbody>
+            </table>
+        </section>
 
-    <script>
-        function searchUsers() {
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("userSearch");
-            filter = input.value.toUpperCase();
-            table = document.querySelector("table");
-            tr = table.getElementsByTagName("tr");
+        <script>
+            function searchUsers() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("userSearch");
+                filter = input.value.toUpperCase();
+                table = document.querySelector("table");
+                tr = table.getElementsByTagName("tr");
 
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[1]; // Index 1 corresponds to the Username column
-                if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[1]; // Index 1 corresponds to the Username column
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
                     }
                 }
             }
-        }
-    </script>
+        </script>
 
+    </div>
 
 
 </body>
